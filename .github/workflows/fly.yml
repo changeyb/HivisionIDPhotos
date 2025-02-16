@@ -1,0 +1,33 @@
+name: Fly Deploy
+on:
+  push:
+    branches:
+      - main # 或者你的主分支名称
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download model weights
+        run: |
+          mkdir -p hivision/creator/weights
+          wget -O hivision/creator/weights/modnet_photographic_portrait_matting.onnx https://github.com/Zeyi-Lin/HivisionIDPhotos/releases/download/pretrained-model/modnet_photographic_portrait_matting.onnx
+          wget -O hivision/creator/weights/hivision_modnet.onnx https://github.com/Zeyi-Lin/HivisionIDPhotos/releases/download/pretrained-model/hivision_modnet.onnx
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to fly.io
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FACE_PLUS_API_KEY: ${{ secrets.FACE_PLUS_API_KEY }}
+          FACE_PLUS_API_SECRET: ${{ secrets.FACE_PLUS_API_SECRET }}
+        run: |
+          flyctl secrets set FACE_PLUS_API_KEY="${FACE_PLUS_API_KEY}" --app hivision-idphotos-ben
+          flyctl secrets set FACE_PLUS_API_SECRET="${FACE_PLUS_API_SECRET}" --app hivision-idphotos-ben
+          flyctl deploy --remote-only

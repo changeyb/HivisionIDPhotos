@@ -5,17 +5,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     libgl1-mesa-glx \
     libglib2.0-0 \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY requirements.txt requirements-app.txt ./
 
-RUN pip install --no-cache-dir -r requirements.txt -r requirements-app.txt
+RUN pip install --no-cache-dir -r requirements.txt -r requirements-app.txt \
+    && rm -rf ~/.cache/pip
 
 COPY . .
 
-EXPOSE 7860
-EXPOSE 8080
+ENV PORT=9510
+ENV PYTHONUNBUFFERED=1
+ENV GRADIO_SERVER_NAME=0.0.0.0
+ENV GRADIO_ANALYTICS_ENABLED=false
 
-CMD ["python3", "-u", "app.py", "--host", "0.0.0.0", "--port", "7860"]
+EXPOSE 9510
+
+CMD ["python3", "deploy_api.py"]

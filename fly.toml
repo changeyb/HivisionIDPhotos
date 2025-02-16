@@ -1,0 +1,25 @@
+# fly.toml app configuration file generated for hivision-idphotos-ben on 2025-02-16T22:30:34+08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'hivision-idphotos-ben'
+primary_region = 'hkg'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  PORT = '9510'
+  RUN_MODE = 'beast'
+
+[http_service]
+  internal_port = 9510
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  size = 'shared-cpu-1x'
