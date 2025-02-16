@@ -27,7 +27,7 @@ MultiPartParser.max_part_size = 10 * 1024 * 1024  # 10MB
 MultiPartParser.max_file_size = 20 * 1024 * 1024   # 20MB
 
 app = FastAPI()
-creator = IDCreator()
+creator = None  # 延迟初始化
 
 # 添加 CORS 中间件 解决跨域问题
 app.add_middleware(
@@ -62,6 +62,10 @@ async def idphoto_inference(
     sharpen_strength: float = Form(0),
     saturation_strength: float = Form(0),
 ):  
+    global creator
+    if creator is None:
+        creator = IDCreator()
+
     # 如果传入了base64，则直接使用base64解码
     if input_image_base64:
         img = base64_2_numpy(input_image_base64)

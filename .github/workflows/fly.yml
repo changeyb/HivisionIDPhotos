@@ -33,4 +33,4 @@ jobs:
         run: |
           flyctl secrets set FACE_PLUS_API_KEY="${FACE_PLUS_API_KEY}" --app hivision-idphotos-ben
           flyctl secrets set FACE_PLUS_API_SECRET="${FACE_PLUS_API_SECRET}" --app hivision-idphotos-ben
-          flyctl deploy --remote-only --strategy immediate
+          flyctl deploy --remote-only --strategy rolling
