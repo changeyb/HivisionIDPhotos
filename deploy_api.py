@@ -19,6 +19,7 @@ import numpy as np
 import cv2
 from starlette.middleware.cors import CORSMiddleware
 from starlette.formparsers import MultiPartParser
+import os
 
 # 设置Starlette表单字段大小限制
 MultiPartParser.max_part_size = 10 * 1024 * 1024  # 10MB
@@ -364,6 +365,5 @@ async def idphoto_crop_inference(
 
 if __name__ == "__main__":
     import uvicorn
-
-    # 在8080端口运行推理服务
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    port = int(os.getenv("PORT", "9510"))
+    uvicorn.run(app, host="0.0.0.0", port=port)

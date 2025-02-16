@@ -19,9 +19,7 @@ COPY . .
 
 ENV PORT=9510
 ENV PYTHONUNBUFFERED=1
-ENV GRADIO_SERVER_NAME=0.0.0.0
-ENV GRADIO_ANALYTICS_ENABLED=false
 
 EXPOSE 9510
 
-CMD ["python3", "deploy_api.py"]
+CMD ["python3", "-u", "deploy_api.py"]

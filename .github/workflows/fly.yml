@@ -22,6 +22,9 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
+      - name: Wait for previous deployments
+        run: flyctl status --app hivision-idphotos-ben
+
       - name: Deploy to fly.io
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -30,4 +33,4 @@ jobs:
         run: |
           flyctl secrets set FACE_PLUS_API_KEY="${FACE_PLUS_API_KEY}" --app hivision-idphotos-ben
           flyctl secrets set FACE_PLUS_API_SECRET="${FACE_PLUS_API_SECRET}" --app hivision-idphotos-ben
-          flyctl deploy --remote-only
+          flyctl deploy --remote-only --strategy immediate
